@@ -1,0 +1,46 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+//Create a db either through docker or neon.tech
+/* commands: 
+    npm init -y
+    npm install typescript tsx @types/node --save-dev
+    npx tsc --init
+    npm install prisma --save-dev
+*/
+//This will create schema.prisma file
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+//Provider could be: mongo, postgres, mysql (based on the provider the queries will be generated)
+//Change the above url with docker or neon.tech db url (this is neon.tech url)
+
+
+model User{
+  id Int @id @default(autoincrement())    //@id -> Primmary Key, @default -> default nature of the variable
+  firstName String
+  middleName String?                      //Optional field
+  lastName String
+  email String @unique
+  password String
+  phoneNumber Int ? 
+}
+
+model Todo{
+  id Int @id @default(autoincrement())   //autoIncrement() -> same as SERIAL of sql means auto increment the number
+  userId Int 
+  title String
+  description String
+  done Boolean @default(false)          //default is false (when user creates a todo)
+}
+//After creating the models
+//First step is migration (to create sql queries out of these models) -> npx prisma migrate dev --name UniqueMessage
+//Second step is to create Automated Clients (so that my index.ts folder knows about these models)  -> npx prisma client
